@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search - Chevron Tile Inc.</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body class="bg-logo">
+
+  <nav class="navbar">
+    <h1 class="logo">Chevron<span>TileInc.</span></h1>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="estimate.html">Estimate</a>
+      <a href="search.html">Search</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <main class="section search-section">
+    <h2>Search Estimate Requests</h2>
+
+    <p>
+      Use the email address from a submitted estimate request to search for customer
+      project information stored in the Chevron Tile Inc. database.
+    </p>
+
+    <form action="/search-estimate" method="GET" onsubmit="return validateSearchForm()" class="search-form">
+      <input type="email" name="email" id="search_email" placeholder="Enter customer email address">
+      <button type="submit" class="btn btn-primary">Search Request</button>
+    </form>
+  </main>
+</body>
+</html>

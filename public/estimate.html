@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estimate - Chevron Tile Inc.</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body class="bg-logo">
+    
+  <nav class="navbar">
+    <h1 class="logo">Chevron<span>TileInc.</span></h1>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="services.html">Services</a>
+      <a href="gallery.html">Gallery</a>
+      <a href="estimate.html">Estimate</a>
+      <a href="search.html">Search</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </nav>
+
+  <main class="section estimate-section">
+    <h2>Request a Free Estimate</h2>
+
+    <p>
+      Planning a tile project in San Diego? Fill out the form below and tell us about
+      your project. We will review your information and get back to you with an estimate.
+    </p>
+
+    <form action="/add-estimate" method="POST" onsubmit="return validateEstimateForm()" class="estimate-form">
+      <input type="text" name="first_name" id="first_name" placeholder="First Name">
+      <input type="text" name="last_name" id="last_name" placeholder="Last Name">
+      <input type="email" name="email" id="email" placeholder="Email Address">
+      <input type="tel" name="phone" id="phone" placeholder="Phone Number">
+
+      <select name="project_type" id="project_type">
+        <option value="">Select Project Type</option>
+        <option value="Kitchen Backsplash">Kitchen Backsplash</option>
+        <option value="Bathroom Remodel">Bathroom Remodel</option>
+        <option value="Shower Surround">Shower Surround</option>
+        <option value="Flooring">Flooring</option>
+        <option value="Commercial Tile">Commercial Tile</option>
+        <option value="Custom Design">Custom Design</option>
+        <option value="Tile Repair">Tile Repair</option>
+      </select>
+
+      <input type="number" name="square_footage" placeholder="Square Footage">
+
+      <select name="budget_range">
+        <option value="">Select Budget Range</option>
+        <option value="Under $1,000">Under $1,000</option>
+        <option value="$1,000 - $3,000">$1,000 - $3,000</option>
+        <option value="$3,000 - $7,500">$3,000 - $7,500</option>
+        <option value="$7,500 - $15,000">$7,500 - $15,000</option>
+        <option value="$15,000+">$15,000+</option>
+      </select>
+
+      <textarea name="project_details" id="project_details" placeholder="Describe your project, preferred tile style, and any details you want us to know"></textarea>
+
+      <button type="submit" class="btn btn-primary">Submit Estimate Request</button>
+    </form>
+  </main>
+</body>
+</html>
