@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql2");
 const bodyParser = require("body-parser");
 const path = require("path");
+const nodemailer = require("nodemailer");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -33,6 +34,16 @@ const db = mysql.createPool({
 
 console.log("MySQL pool created");
 
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
 // save estimate form data
 app.post("/add-estimate", (req, res) => {
   const {
@@ -55,17 +66,49 @@ app.post("/add-estimate", (req, res) => {
   db.query(
     sql,
     [first_name, last_name, email, phone, project_type, square_footage, budget_range, project_details],
-    (err, result) => {
+    async (err, result) => {
       if (err) {
         console.error(err);
         return res.send("Error saving estimate request.");
       }
 
-      res.send(`
-        <h1>Estimate Request Submitted</h1>
-        <p>Thank you, ${first_name}. Your request has been saved.</p>
-        <a href="/estimate.html">Go Back</a>
-      `);
+      const adminEmail = process.env.ESTIMATE_TO;
+
+      if (!adminEmail || !adminEmail.endsWith("@chevrontileinc.com")) {
+        return res.send("Estimate saved, but admin email is not configured correctly.");
+      }
+
+      const message = `
+New Estimate Request
+
+Name: ${first_name} ${last_name}
+Email: ${email}
+Phone: ${phone}
+Project Type: ${project_type}
+Square Footage: ${square_footage}
+Budget Range: ${budget_range}
+
+Project Details:
+${project_details}
+      `;
+
+      try {
+        await transporter.sendMail({
+          from: process.env.SMTP_USER,
+          to: adminEmail,
+          subject: "New Chevron Tile Estimate Request",
+          text: message
+        });
+
+        res.send(`
+          <h1>Estimate Request Submitted</h1>
+          <p>Thank you, ${first_name}. Your request has been sent to Chevron Tile Inc.</p>
+          <a href="/estimate.html">Go Back</a>
+        `);
+      } catch (emailError) {
+        console.error(emailError);
+        res.send("Estimate saved, but email could not be sent.");
+      }
     }
   );
 });
@@ -130,7 +173,7 @@ app.get("/search-estimate", (req, res) => {
   });
 });
 
-app.get("/export-estimates", (req, res) => {
+/*app.get("/export-estimates", (req, res) => {
   const sql = "SELECT * FROM estimates";
 
   db.query(sql, (err, results) => {
@@ -149,7 +192,7 @@ app.get("/export-estimates", (req, res) => {
     res.setHeader("Content-Disposition", "attachment; filename=chevron_estimates.csv");
     res.send(csv);
   });
-});
+});*/
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
