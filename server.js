@@ -12,21 +12,26 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // MySQL connection
-const db = mysql.createConnection({
+const db = mysql.createPool({
   host: process.env.MYSQLHOST,
   user: process.env.MYSQLUSER,
   password: process.env.MYSQLPASSWORD,
   database: process.env.MYSQLDATABASE,
-  port: process.env.MYSQLPORT
+  port: process.env.MYSQLPORT,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-db.connect((err) => {
+/*db.connect((err) => {
   if (err) {
     console.error("Database connection failed:", err);
     return;
   }
   console.log("Connected to MySQL");
-});
+});*/
+
+console.log("MySQL pool created");
 
 // save estimate form data
 app.post("/add-estimate", (req, res) => {
