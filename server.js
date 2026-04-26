@@ -130,6 +130,26 @@ app.get("/search-estimate", (req, res) => {
   });
 });
 
+app.get("/export-estimates", (req, res) => {
+  const sql = "SELECT * FROM estimates";
+
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.send("Error exporting estimate data.");
+    }
+
+    let csv = "ID,First Name,Last Name,Email,Phone,Project Type,Square Footage,Budget Range,Project Details,Created At\n";
+
+    results.forEach((row) => {
+      csv += `"${row.id}","${row.first_name}","${row.last_name}","${row.email}","${row.phone}","${row.project_type}","${row.square_footage}","${row.budget_range}","${row.project_details}","${row.created_at}"\n`;
+    });
+
+    res.setHeader("Content-Type", "text/csv");
+    res.setHeader("Content-Disposition", "attachment; filename=chevron_estimates.csv");
+    res.send(csv);
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
